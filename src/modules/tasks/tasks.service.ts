@@ -3,7 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AuditAction, User, UserRole } from '../../generated/prisma/client';
+import {
+  AuditAction,
+  Prisma,
+  User,
+  UserRole,
+} from '../../generated/prisma/client';
 import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
@@ -28,7 +33,7 @@ export class TasksService {
       action: AuditAction.TASK_CREATED,
       actorId: actor.id,
       taskId: task.id,
-      afterData: task as Record<string, unknown>,
+      afterData: task as unknown as Prisma.InputJsonValue,
       summary: `Task "${task.title}" created by ${actor.name}`,
     });
 
@@ -73,8 +78,8 @@ export class TasksService {
         : AuditAction.TASK_UPDATED,
       actorId: actor.id,
       taskId: id,
-      beforeData: before as Record<string, unknown>,
-      afterData: after as Record<string, unknown>,
+      beforeData: before as unknown as Prisma.InputJsonValue,
+      afterData: after as unknown as Prisma.InputJsonValue,
       summary: isAssignment
         ? `Task "${after.title}" assigned to ${after.assignedTo?.name ?? 'unknown'}`
         : `Task "${after.title}" updated by ${actor.name}`,
@@ -117,7 +122,7 @@ export class TasksService {
       action: AuditAction.TASK_DELETED,
       actorId: actor.id,
       taskId: id,
-      beforeData: task as Record<string, unknown>,
+      beforeData: task as unknown as Prisma.InputJsonValue,
       summary: `Task "${task.title}" deleted by ${actor.name}`,
     });
 

@@ -6,30 +6,29 @@ export interface CreateAuditLogInput {
   action: AuditAction;
   actorId: string;
   taskId: string;
-  beforeData?: Record<string, unknown>;
-  afterData?: Record<string, unknown>;
+  beforeData?: Prisma.InputJsonValue;
+  afterData?: Prisma.InputJsonValue;
   summary?: string;
 }
 
-export type AuditLogWithRelations = Prisma.AuditLogGetPayload<{
-  include: {
-    actor: { select: { id: true; name: true; email: true; role: true } };
-    task: { select: { id: true; title: true } };
-  };
-}>;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const auditInclude = {
   actor: { select: { id: true, name: true, email: true, role: true } },
   task: { select: { id: true, title: true } },
 } satisfies Prisma.AuditLogInclude;
+
+export type AuditLogWithRelations = Prisma.AuditLogGetPayload<{
+  include: typeof auditInclude;
+}>;
 
 @Injectable()
 export class AuditLogsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: CreateAuditLogInput): Promise<AuditLogWithRelations> {
-    return this.prisma.auditLog.create({ data, include: auditInclude });
+    return this.prisma.auditLog.create({
+      data,
+      include: auditInclude,
+    }) as Promise<AuditLogWithRelations>;
   }
 
   findAll(): Promise<AuditLogWithRelations[]> {

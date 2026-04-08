@@ -12,6 +12,7 @@ import { PrismaModule } from './prisma/prisma.module';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig, jwtConfig],
+      envFilePath: '.env',
     }),
     ThrottlerModule.forRoot([{ ttl: 6000, limit: 100 }]),
     PrismaModule,
