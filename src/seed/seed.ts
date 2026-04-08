@@ -1,7 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import 'dotenv/config';
-import { PrismaClient, UserRole } from '../generated/prisma/client';
 
 interface SeedUser {
   email: string;

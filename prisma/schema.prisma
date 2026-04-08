@@ -9,6 +9,10 @@ generator client {
   moduleFormat = "cjs"
 }
 
+generator client_js {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
 }
