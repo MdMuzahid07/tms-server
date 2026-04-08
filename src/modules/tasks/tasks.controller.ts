@@ -58,7 +58,7 @@ export class TasksController {
   }
 
   @Patch(':id/status')
-  @Roles(UserRole.USER)
+  @Roles(UserRole.ADMIN, UserRole.USER)
   updateStatus(
     @Param('id') id: string,
     @Body() dto: UpdateTaskStatusDto,
