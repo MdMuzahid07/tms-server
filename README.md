@@ -31,6 +31,24 @@
 $ npm install
 ```
 
+## Environment
+
+- Create `tms-server/.env` (or copy from `tms-server/.env.example`) and set **`DATABASE_URL`**, **`JWT_SECRET`**, and **`PORT`**.
+- If login returns **500** with a Prisma **`ETIMEDOUT`** error, your `DATABASE_URL` host isn’t reachable from your machine. Point it to a reachable/local Postgres instance.
+
+## Database
+
+```bash
+# from tms-server/
+npx prisma migrate deploy
+npm run db-seed
+```
+
+Seeded demo credentials:
+
+- **admin**: `admin@tms.com` / `Admin@123`
+- **user**: `user@tms.com` / `User@123`
+
 ## Compile and run the project
 
 ```bash

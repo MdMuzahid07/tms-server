@@ -19,10 +19,25 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
+    if (!(exception instanceof HttpException)) {
+      // Ensure unexpected errors are visible during development.
+      // (Nest won't automatically log them once we catch everything here.)
+      console.error(exception);
+    }
+
+    const rawMessage =
       exception instanceof HttpException
         ? exception.getResponse()
         : 'Internal server error!';
+
+    const message =
+      typeof rawMessage === 'string'
+        ? rawMessage
+        : rawMessage &&
+            typeof rawMessage === 'object' &&
+            'message' in rawMessage
+          ? ((rawMessage as { message?: unknown }).message ?? rawMessage)
+          : rawMessage;
 
     response.status(status).json({
       success: false,
